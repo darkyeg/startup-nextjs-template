@@ -39,6 +39,8 @@ export class CodeError<C extends ErrorCode = ErrorCode, I = unknown>
    * @returns true if the error is an UnauthorizedError, otherwise false.
    */
   isUnauthorizedError(): this is UnauthorizedError {
+    // TODO:(Youssef Khalil): Maybe we need to use ts-rest ?
+    // @ts-expect-error include bug
     return UNAUTHORIZED_CODES.includes(this.code);
   }
 
@@ -95,28 +97,21 @@ export enum ErrorCode {
   InvalidImageId = 5005,
 }
 
-export const UNAUTHORIZED_CODES: ErrorCode[] = [
+export const UNAUTHORIZED_CODES = [
   ErrorCode.ExpiredToken,
   ErrorCode.InvalidToken,
   ErrorCode.InvalidUser,
   ErrorCode.NoToken,
   ErrorCode.NotVerified,
   ErrorCode.Forbidden,
-];
+] as const;
 
 export type UniqueError<Info extends string> = CodeError<
   ErrorCode.UniqueConstraintViolation,
   Info
 >;
 
-export type UnauthorizedError = CodeError<
-  | ErrorCode.ExpiredToken
-  | ErrorCode.InvalidToken
-  | ErrorCode.InvalidUser
-  | ErrorCode.NoToken
-  | ErrorCode.NotVerified
-  | ErrorCode.Forbidden
->;
+export type UnauthorizedError = CodeError<(typeof UNAUTHORIZED_CODES)[number]>;
 export type UnknownError = CodeError<ErrorCode.UnknownError>;
 
 export type AxiosError = CodeError<ErrorCode.AxiosError, _AxiosError>;
