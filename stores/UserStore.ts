@@ -89,7 +89,9 @@ export class UserStore<Ready extends boolean = boolean> {
     this.status =
       Fetch.isCodeErrorUnsafe(err) && err.code == ErrorCode.NotVerified
         ? UserStatus.NotVerified
-        : UserStatus.Error;
+        : err.isUnauthorizedError()
+          ? UserStatus.NotLoggedIn
+          : UserStatus.Error;
   }
 
   /**

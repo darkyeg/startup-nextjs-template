@@ -38,7 +38,7 @@ export class CodeError<C extends ErrorCode = ErrorCode, I = unknown>
    * @param error - The error to check.
    * @returns true if the error is an UnauthorizedError, otherwise false.
    */
-  isUnauthorizedError(): boolean {
+  isUnauthorizedError(): this is UnauthorizedError {
     return UNAUTHORIZED_CODES.includes(this.code);
   }
 
