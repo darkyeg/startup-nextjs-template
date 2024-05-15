@@ -1,0 +1,7 @@
+.navbar {
+  @apply h-[76px]
+    w-full
+    bg-primary
+    p-4
+    sm:h-[100px];
+}

@@ -1,0 +1,12 @@
+{
+  "pages": {
+    "home": {
+      "hi": "Hello Homies!",
+      "dont-click-me": "Don't Click Me",
+      "bruh": "Bruh!"
+    }
+  },
+  "common": {
+    "loading": "Loading..."
+  }
+}

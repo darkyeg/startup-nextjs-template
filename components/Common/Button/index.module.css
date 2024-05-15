@@ -1,0 +1,75 @@
+.button {
+  @apply relative
+    inline-flex
+    items-center
+    justify-center
+    gap-1
+    rounded-[8px]
+    px-4.5
+    py-2.5
+    text-center
+    font-medium
+    transition-all
+    duration-150
+    sm:font-semibold;
+
+  svg {
+    @apply size-5;
+  }
+
+  &.icon {
+    @apply items-center
+    justify-center
+    p-0;
+  }
+
+  &[aria-disabled='true'] {
+    @apply cursor-not-allowed;
+  }
+
+  &.primary {
+    @apply border
+      border-primary
+      bg-primary
+      text-white
+      shadow-sm;
+
+    &:hover {
+      @apply border-opacity-80
+        bg-opacity-80
+        text-white;
+    }
+
+    &:focus {
+      @apply border-opacity-80
+      bg-opacity-80;
+    }
+
+    &[aria-disabled='true'] {
+      @apply bg-primary
+        opacity-50;
+    }
+  }
+
+  &.outline {
+    @apply border
+      border-primary
+      bg-white
+      text-primary
+      shadow-sm;
+
+    &:hover {
+      @apply border-opacity-80
+        bg-opacity-80;
+    }
+
+    &:focus {
+      @apply border-opacity-80
+      bg-opacity-80;
+    }
+
+    &[aria-disabled='true'] {
+      @apply opacity-50;
+    }
+  }
+}

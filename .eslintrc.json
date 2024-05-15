@@ -1,0 +1,52 @@
+{
+  "extends": "prettier",
+  "overrides": [
+    {
+      "files": ["public/**/*.js"],
+      "env": { "browser": true }
+    },
+    {
+      "files": ["**/*.{js,mjs,ts,tsx,mdx}"],
+      "env": { "es6": true, "node": true },
+      "plugins": ["import"],
+      "extends": ["eslint:recommended", "next", "next/core-web-vitals"],
+      "rules": {
+        "import/order": [
+          "error",
+          {
+            "groups": [
+              "builtin",
+              "external",
+              "internal",
+              ["sibling", "parent"],
+              "index",
+              "unknown"
+            ],
+            "newlines-between": "always",
+            "alphabetize": {
+              "order": "asc",
+              "caseInsensitive": true
+            }
+          }
+        ]
+      }
+    },
+    {
+      "files": ["**/*.ts?(x)"],
+      "plugins": ["@typescript-eslint", "no-relative-import-paths"],
+      "extends": [
+        "plugin:@typescript-eslint/recommended",
+        "plugin:import/recommended",
+        "plugin:import/typescript"
+      ],
+      "parser": "@typescript-eslint/parser",
+      "rules": {
+        "@typescript-eslint/consistent-type-imports": "error",
+        "no-relative-import-paths/no-relative-import-paths": [
+          "warn",
+          { "allowSameFolder": true, "prefix": "@" }
+        ]
+      }
+    }
+  ]
+}
