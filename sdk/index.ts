@@ -22,12 +22,17 @@ class Sdk {
    */
   user = new User(this);
 
+  fetch = new Fetch({
+    withCredentials: true,
+    baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
+  });
+
   /**
    * Constructs an instance of the SDK.
    * @param fetch - The Fetch instance used for making HTTP requests.
    */
-  constructor(public fetch: Fetch) {
-    fetch.setErrorMiddleware(this.handleError.bind(this));
+  constructor() {
+    this.fetch.setErrorMiddleware(this.handleError.bind(this));
   }
 
   /**

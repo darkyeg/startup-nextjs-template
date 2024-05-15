@@ -1,15 +1,17 @@
 import type { Result, Err } from '@sapphire/result';
 import { ok, err } from '@sapphire/result';
 import type {
+  Axios,
   AxiosRequestConfig,
   AxiosResponse,
+  CreateAxiosDefaults,
   AxiosError as _AxiosError,
 } from 'axios';
 import axios from 'axios';
 import { z } from 'zod';
 
 import type { AxiosError, ICodeError, UnknownError } from '@/types';
-import { CodeError , ErrorCode } from '@/types';
+import { CodeError, ErrorCode } from '@/types';
 
 /**
  * Represents an error that can occur during a request, including Axios errors and custom errors.
@@ -39,7 +41,12 @@ export type RequestResult<T, E extends CodeError = CodeError> = Result<
  * A utility class for making HTTP requests with error handling.
  */
 export class Fetch {
+  public base: Axios;
   public errorMiddleware?: ErrorMiddleware;
+
+  constructor(config?: CreateAxiosDefaults) {
+    this.base = axios.create(config);
+  }
 
   /**
    * Sets the error middleware function.
@@ -68,11 +75,8 @@ export class Fetch {
     url: string,
     config?: AxiosRequestConfig<D>
   ): Promise<RequestResult<AxiosResponse<T>, E>> {
-    return axios
-      .get<T>(resolveUrl(url), {
-        ...config,
-        withCredentials: config?.withCredentials ?? true,
-      })
+    return this.base
+      .get<T>(url, config)
       .then(r => ok(r))
       .catch(e => this.resolveError<E>(e));
   }
@@ -98,11 +102,8 @@ export class Fetch {
     data?: D,
     config?: AxiosRequestConfig<D>
   ): Promise<RequestResult<AxiosResponse<T>, E>> {
-    const res = await axios
-      .post<T>(resolveUrl(url), data, {
-        ...config,
-        withCredentials: config?.withCredentials ?? true,
-      })
+    const res = await this.base
+      .post<T>(url, data, config)
       .then(r => ok(r))
       .catch(e => this.resolveError<E>(e));
     return res;
@@ -129,11 +130,8 @@ export class Fetch {
     data?: D,
     config?: AxiosRequestConfig<D>
   ): Promise<RequestResult<AxiosResponse<T>, E>> {
-    const res = await axios
-      .patch<T>(resolveUrl(url), data, {
-        ...config,
-        withCredentials: config?.withCredentials ?? true,
-      })
+    const res = await this.base
+      .patch<T>(url, data, config)
       .then(r => ok(r))
       .catch(e => this.resolveError<E>(e));
     return res;
@@ -160,11 +158,8 @@ export class Fetch {
     data?: D,
     config?: AxiosRequestConfig<D>
   ): Promise<RequestResult<AxiosResponse<T>, E>> {
-    const res = await axios
-      .put<T>(resolveUrl(url), data, {
-        ...config,
-        withCredentials: config?.withCredentials ?? true,
-      })
+    const res = await this.base
+      .put<T>(url, data, config)
       .then(r => ok(r))
       .catch(e => this.resolveError<E>(e));
     return res;
@@ -189,11 +184,8 @@ export class Fetch {
     url: string,
     config?: AxiosRequestConfig<D>
   ): Promise<RequestResult<AxiosResponse<T>, E>> {
-    const res = await axios
-      .delete<T>(resolveUrl(url), {
-        ...config,
-        withCredentials: config?.withCredentials ?? true,
-      })
+    const res = await this.base
+      .delete<T>(url, config)
       .then(r => ok(r))
       .catch(e => this.resolveError<E>(e));
     return res;
@@ -245,19 +237,6 @@ export class Fetch {
   ): err is T {
     return typeof err == 'object' && err !== null && 'code' in err;
   }
-}
-
-/**
- * Resolves a URL, prefixing it with the backend URL if necessary.
- * @param url - The URL to resolve.
- * @returns The resolved URL.
- */
-function resolveUrl(url: string): string {
-  if (url.startsWith('https')) {
-    return url;
-  }
-
-  return `${process.env.NEXT_PUBLIC_BACKEND_URL}${url.startsWith('/') ? '' : '/'}${url}`;
 }
 
 const errorSchema = z.object({

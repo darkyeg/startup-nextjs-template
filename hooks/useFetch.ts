@@ -1,5 +1,7 @@
-import useSDK from './useSDK';
+import { useMemo } from 'react';
 
-const useFetch = () => useSDK().fetch;
+import { Fetch } from '@/sdk/fetch';
+
+const useFetch = () => useMemo(() => new Fetch(), []);
 
 export default useFetch;

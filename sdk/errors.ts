@@ -39,7 +39,7 @@ export class CodeError<C extends ErrorCode = ErrorCode, I = unknown>
    * @returns true if the error is an UnauthorizedError, otherwise false.
    */
   isUnauthorizedError(): this is UnauthorizedError {
-    // TODO:(Youssef Khalil): Maybe we need to use ts-rest ?
+    // TODO:(Youssef Khalil): Maybe we need to use ts-reset ?
     // @ts-expect-error include bug
     return UNAUTHORIZED_CODES.includes(this.code);
   }
